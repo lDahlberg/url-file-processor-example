@@ -1,0 +1,44 @@
+package com.ebayexample.urlfileprocessor.readers;
+
+import com.ebayexample.urlfileprocessor.services.NetworkProcessor;
+import com.ebayexample.urlfileprocessor.services.impl.NetworkProcessorImpl;
+
+import java.io.*;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.zip.GZIPInputStream;
+
+public class FileReader {
+
+    private NetworkProcessor networkProcessor;
+    private String fileToRead;
+
+    public FileReader(String fileToRead) {
+        networkProcessor = new NetworkProcessorImpl();
+        this.fileToRead = fileToRead;
+    }
+
+    public void readFile() {
+        try (InputStream in = new GZIPInputStream(new FileInputStream(this.fileToRead))) {
+
+            Reader decoder = new InputStreamReader(in);
+            BufferedReader br = new BufferedReader(decoder);
+
+            List<URI> uris = new ArrayList<>();
+            String line;
+            while ((line = br.readLine()) != null) {
+                URI uri = URI.create(line);
+                uris.add(uri);
+
+                if(uris.size() == 250) {
+                    networkProcessor.makeNetworkRequest(uris);
+                    uris = new ArrayList<>();
+                }
+            }
+            networkProcessor.makeNetworkRequest(uris);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
