@@ -1,32 +1,22 @@
 package com.ebayexample.urlfileprocessor.errorHandlers;
 
-import com.ebayexample.urlfileprocessor.logger.LogSingleton;
-import org.springframework.http.HttpStatus;
+import com.ebayexample.urlfileprocessor.services.CounterService;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.web.client.ResponseErrorHandler;
 
 import java.io.IOException;
 
-import static org.springframework.http.HttpStatus.Series.CLIENT_ERROR;
-import static org.springframework.http.HttpStatus.Series.SERVER_ERROR;
+import static org.springframework.http.HttpStatus.Series.*;
 
 public class RestTemplateResponseErrorHandler implements ResponseErrorHandler {
 
     @Override
     public boolean hasError(ClientHttpResponse httpResponse) throws IOException {
-        return (
-                httpResponse.getStatusCode().series() == CLIENT_ERROR
-                        || httpResponse.getStatusCode().series() == SERVER_ERROR);
+        return httpResponse.getStatusCode().series() != SUCCESSFUL;
     }
 
     @Override
-    public void handleError(ClientHttpResponse httpResponse) throws IOException {
-        if (httpResponse.getStatusCode()
-                .series() == SERVER_ERROR) {
-            LogSingleton.addToFailureCounter();
-        } else if (httpResponse.getStatusCode()
-                .series() == CLIENT_ERROR) {
-            LogSingleton.addToFailureCounter();
-        }
+    public void handleError(ClientHttpResponse httpResponse) {
+            CounterService.addToFailureCounter();
     }
 }

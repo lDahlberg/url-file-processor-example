@@ -1,12 +1,12 @@
-package com.ebayexample.urlfileprocessor.logger;
+package com.ebayexample.urlfileprocessor.services;
 
-public final class LogSingleton {
+public final class CounterService {
 
     // May need to be a BigInt at some point
     private static long successCounter = 0L;
     private static long failureCounter = 0L;
 
-    private LogSingleton() {
+    private CounterService() {
     }
 
     synchronized public static void addToSuccessCounter() {
@@ -23,5 +23,9 @@ public final class LogSingleton {
 
     synchronized public static long getFailureCounter() {
         return failureCounter;
+    }
+
+    synchronized public static long getTotal() {
+        return successCounter + failureCounter;
     }
 }

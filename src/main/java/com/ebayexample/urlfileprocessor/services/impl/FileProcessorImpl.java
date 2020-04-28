@@ -7,10 +7,13 @@ import java.util.List;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
+// This class left without unit tests as it has no logic
+// And unit testing it within a multi-threaded process would be
+// more trouble than it's worth
 public class FileProcessorImpl implements FileProcessor {
 
     @Override
-    public void processFiles(List<String> fileNames) throws InterruptedException {
+    public void processFiles(List<String> fileNames) {
         int expectedCoresPlusOne = 5;
         ExecutorService executor = Executors.newFixedThreadPool(expectedCoresPlusOne);
 
@@ -23,6 +26,10 @@ public class FileProcessorImpl implements FileProcessor {
         }).collect(Collectors.toList());
 
         // Does not return anything currently
-        executor.invokeAll(callables);
+        try {
+            executor.invokeAll(callables);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -2,9 +2,9 @@ package com.ebayexample.urlfileprocessor.readers;
 
 import com.ebayexample.urlfileprocessor.services.NetworkProcessor;
 import com.ebayexample.urlfileprocessor.services.impl.NetworkProcessorImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.*;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
@@ -25,11 +25,10 @@ public class FileReader {
             Reader decoder = new InputStreamReader(in);
             BufferedReader br = new BufferedReader(decoder);
 
-            List<URI> uris = new ArrayList<>();
+            List<String> uris = new ArrayList<>();
             String line;
             while ((line = br.readLine()) != null) {
-                URI uri = URI.create(line);
-                uris.add(uri);
+                uris.add(line);
 
                 if(uris.size() == 250) {
                     networkProcessor.makeNetworkRequest(uris);
