@@ -2,7 +2,6 @@ package com.ebayexample.urlfileprocessor.readers;
 
 import com.ebayexample.urlfileprocessor.services.NetworkProcessor;
 import com.ebayexample.urlfileprocessor.services.impl.NetworkProcessorImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.*;
 import java.util.ArrayList;
